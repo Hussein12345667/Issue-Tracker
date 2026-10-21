@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c2a">
+    <meta name="description" content="A focused workspace for reporting, investigating, and resolving equipment incidents.">
+    <title>EIMS — Equipment Incident Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#" aria-label="EIMS home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M6 7.5h11.2a8.8 8.8 0 0 1 8.8 8.8v8.2H14.8A8.8 8.8 0 0 1 6 15.7V7.5Z" stroke="currentColor" stroke-width="2.4"/><path d="M11 12.5h6.1a4.1 4.1 0 0 1 4.1 4.1v3.9h-6.1a4.1 4.1 0 0 1-4.1-4.1v-3.9Z" fill="currentColor"/></svg>
+          </span>
+          <span class="brand-name">EIMS</span>
+        </a>
+
+        <div class="workspace-switcher">
+          <span class="workspace-icon">N</span>
+          <span class="workspace-copy"><strong>Northstar Plant</strong><small>Operations workspace</small></span>
+          <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </div>
+
+        <p class="nav-label">WORKSPACE</p>
+        <nav class="primary-nav">
+          <button class="nav-item active" type="button" data-view="incidents">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 7h6M7 10h6M7 13h3"/></svg>
+            <span>Incidents</span><span class="nav-count" id="nav-count">0</span>
+          </button>
+          <button class="nav-item" type="button" data-view="dashboard">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5.5" height="6" rx="1.5"/><rect x="11.5" y="3" width="5.5" height="3.5" rx="1.5"/><rect x="11.5" y="8.5" width="5.5" height="8.5" rx="1.5"/><rect x="3" y="11" width="5.5" height="6" rx="1.5"/></svg>
+            <span>Overview</span>
+          </button>
+          <button class="nav-item" type="button" data-view="tools">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11.8 4.2a4.1 4.1 0 0 0-5.2 5.2l-3.1 3.1a2 2 0 0 0 2.8 2.8l3.1-3.1a4.1 4.1 0 0 0 5.2-5.2l-2.3 2.3-2.8-2.8 2.3-2.3Z"/></svg>
+            <span>Equipment</span>
+          </button>
+        </nav>
+
+        <p class="nav-label nav-label-spaced">MANAGE</p>
+        <nav class="primary-nav">
+          <button class="nav-item" type="button" data-view="activity">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 15.5V11m6 4.5V5m6 10.5V8"/></svg>
+            <span>Activity log</span>
+          </button>
+          <button class="nav-item" type="button" data-view="settings">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3"/><path d="m16.1 11.8 1 .8-1.5 2.6-1.2-.5a7 7 0 0 1-1.4.8l-.2 1.3h-3l-.2-1.3a7 7 0 0 1-1.4-.8l-1.2.5-1.5-2.6 1-.8a6 6 0 0 1 0-1.6l-1-.8L7 6.8l1.2.5a7 7 0 0 1 1.4-.8l.2-1.3h3l.2 1.3a7 7 0 0 1 1.4.8l1.2-.5 1.5 2.6-1 .8a6 6 0 0 1 0 1.6Z"/></svg>
+            <span>Settings</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <span class="help-icon">?</span>
+            <strong>Need a hand?</strong>
+            <p>Read the setup guide for running the app and keeping reports saved.</p>
+            <a href="README.md" target="_blank" rel="noopener">Setup guide <span aria-hidden="true">↗</span></a>
+          </div>
+          <button class="profile-button" type="button" aria-label="Employee workspace, team member">
+            <span class="avatar">TM</span>
+            <span class="profile-copy"><strong>Employee workspace</strong><small>Team member</small></span>
+            <span class="profile-dots" aria-hidden="true">···</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Northstar Plant</span><span class="crumb-divider">/</span><strong id="breadcrumb-current">Incidents</strong></div>
+          <div class="topbar-actions">
+            <span class="live-indicator" id="connection-status" data-state="connecting" role="status"><span></span> Connecting to database</span>
+            <button class="icon-button notification-button" type="button" aria-label="Notifications">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15 7.8a5 5 0 0 0-10 0c0 5-2 5.2-2 6.2h14c0-1-2-1.2-2-6.2ZM8 17h4"/></svg>
+              <i></i>
+            </button>
+            <span class="avatar avatar-small">TM</span>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <section class="page-heading">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-line"></span> OPERATIONS CENTER <span class="eyebrow-dot">·</span> <span id="today-label"></span></div>
+              <h1 id="page-title">Incident management</h1>
+              <p id="page-subtitle">Track issues, coordinate investigations, and keep your equipment running.</p>
+            </div>
+            <div class="heading-actions">
+              <button class="button button-secondary" type="button" id="export-button">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m-3-3 3 3 3-3M4 13v3h12v-3"/></svg> Export report
+              </button>
+              <button class="button button-primary" type="button" id="new-incident-button">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg> New incident
+              </button>
+            </div>
+          </section>
+
+          <section class="metrics-grid" aria-label="Incident summary">
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Open incidents</span><span class="metric-icon metric-icon-blue"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l2.5 1.5"/></svg></span></div>
+              <div class="metric-value" id="metric-open">0</div><div class="metric-foot"><span class="metric-note">Awaiting investigation or action</span></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">In progress</span><span class="metric-icon metric-icon-violet"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 14.5 8 10l2.5 2.5L16 6.5"/><path d="M12 6.5h4v4"/></svg></span></div>
+              <div class="metric-value" id="metric-progress">0</div><div class="metric-foot"><span class="metric-note">Actively being worked on</span></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Critical priority</span><span class="metric-icon metric-icon-red"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 18 17H2L10 3Z"/><path d="M10 8v4m0 2v.1"/></svg></span></div>
+              <div class="metric-value" id="metric-critical">0</div><div class="metric-foot"><span class="critical-dot"></span><span class="metric-note">Requires immediate attention</span></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Resolved this month</span><span class="metric-icon metric-icon-green"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 10 3.2 3.2L15.5 6"/></svg></span></div>
+              <div class="metric-value" id="metric-resolved">0</div><div class="metric-foot"><span class="metric-note">Closed and verified</span></div>
+            </article>
+          </section>
+
+          <section class="content-grid" id="incident-view">
+            <div class="incidents-panel panel">
+              <div class="panel-heading">
+                <div><h2>All incidents <span class="count-pill" id="result-count">0</span></h2><p>A live view of reported equipment issues.</p></div>
+                <button class="button button-quiet" id="load-sample-button" type="button">Load sample data</button>
+              </div>
+              <div class="filters-row">
+                <label class="search-field">
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.8" cy="8.8" r="5.8"/><path d="m13 13 4 4"/></svg>
+                  <input id="search-input" type="search" placeholder="Search incidents, equipment, or owners..." aria-label="Search incidents">
+                  <kbd>⌘ K</kbd>
+                </label>
+                <label class="select-wrap"><span class="sr-only">Filter by status</span><select id="status-filter"><option value="">All statuses</option><option>Open</option><option>In Progress</option><option>Resolved</option></select><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></label>
+                <label class="select-wrap"><span class="sr-only">Filter by priority</span><select id="priority-filter"><option value="">All priorities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th scope="col">INCIDENT</th><th scope="col">EQUIPMENT</th><th scope="col">PRIORITY</th><th scope="col">STATUS</th><th scope="col">REPORTED</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+                  <tbody id="incidents-table"></tbody>
+                </table>
+                <div class="empty-state" id="empty-state">
+                  <span class="empty-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="5" width="20" height="22" rx="4"/><path d="M11 12h10m-10 5h10m-10 5h6"/></svg></span>
+                  <h3>No incidents to show</h3>
+                  <p>Everything is clear. Report an incident or load sample data to explore the workspace.</p>
+                  <button class="button button-primary button-small" type="button" id="empty-new-button">Report an incident</button>
+                </div>
+              </div>
+              <div class="table-footer"><span id="table-summary">Showing 0 incidents</span><span class="updated-label"><span></span> Updated just now</span></div>
+            </div>
+            <aside class="right-column">
+              <section class="panel equipment-panel">
+                <div class="small-panel-heading"><div><h2>Equipment health</h2><p>Across active incidents</p></div><button class="more-button" type="button" aria-label="More equipment health options">···</button></div>
+                <div class="health-score"><span class="health-number" id="health-score">100</span><span class="health-unit">%</span><span class="health-caption">operational</span></div>
+                <div class="health-track"><span id="health-bar"></span></div>
+                <div class="health-legend"><span><i class="legend-operational"></i>Operational</span><strong id="equipment-count">0 equipment impacted</strong></div>
+              </section>
+              <section class="panel activity-panel">
+                <div class="small-panel-heading"><div><h2>Recent activity</h2><p>Latest updates from your team</p></div><button class="more-button" type="button" aria-label="More activity options">···</button></div>
+                <div class="activity-list" id="activity-list"></div>
+              </section>
+              <div class="tip-card"><span class="tip-spark">✳</span><div><strong>Good to know</strong><p>Adding a root cause helps your team prevent repeat equipment failures.</p></div><button type="button" aria-label="Dismiss tip" id="dismiss-tip">×</button></div>
+            </aside>
+          </section>
+
+          <section class="dashboard-view hidden" id="dashboard-view">
+            <div class="dashboard-grid">
+              <section class="panel dashboard-panel"><div class="small-panel-heading"><div><h2>Priority distribution</h2><p>Current reported incidents</p></div></div><div class="priority-chart" id="priority-chart"></div></section>
+              <section class="panel dashboard-panel"><div class="small-panel-heading"><div><h2>Incident status</h2><p>Progress across your workspace</p></div></div><div class="status-chart" id="status-chart"></div></section>
+              <section class="panel dashboard-panel dashboard-wide"><div class="small-panel-heading"><div><h2>Most affected equipment</h2><p>Equipment with the most incident reports</p></div></div><div id="equipment-breakdown"></div></section>
+            </div>
+          </section>
+
+          <section class="other-view hidden" id="other-view">
+            <div class="panel equipment-directory hidden" id="equipment-directory">
+              <div class="panel-heading">
+                <div><h2>Equipment directory <span class="count-pill" id="equipment-directory-count">0</span></h2><p>Your registered plant equipment and current incident status.</p></div>
+                <label class="directory-search"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.8" cy="8.8" r="5.8"/><path d="m13 13 4 4"/></svg><input id="equipment-search" type="search" placeholder="Find equipment..." aria-label="Search equipment"></label>
+              </div>
+              <div class="equipment-directory-grid" id="equipment-directory-list"></div>
+            </div>
+            <div class="panel other-panel" id="generic-other-panel"><span class="empty-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="5" width="20" height="22" rx="4"/><path d="M11 12h10m-10 5h10m-10 5h6"/></svg></span><h2 id="other-view-title">Activity log</h2><p id="other-view-description">Follow incident updates and the actions taken across your workspace.</p><button class="button button-secondary" type="button" id="back-to-incidents">Back to incidents</button></div>
+          </section>
+          <footer class="page-footer"><span>EIMS <span class="footer-separator">/</span> OPERATIONS PLATFORM</span><span>Equipment Incident Management System <span class="footer-separator">·</span> v1.0</span></footer>
+        </div>
+      </main>
+    </div>
+
+    <dialog class="incident-dialog" id="incident-dialog" aria-labelledby="dialog-title">
+      <form id="incident-form" method="dialog">
+        <div class="dialog-header"><div><span class="dialog-eyebrow">INCIDENT REPORT</span><h2 id="dialog-title">Report an incident</h2><p>Share the details so your team can take action.</p></div><button type="button" class="dialog-close" id="close-dialog" aria-label="Close dialog">×</button></div>
+        <div class="dialog-body">
+          <div class="form-grid">
+            <label class="form-field field-full"><span>Incident title <b>*</b></span><input name="title" required maxlength="100" placeholder="e.g. Hydraulic pressure drop on Line 2"></label>
+            <label class="form-field"><span>Equipment <b>*</b></span><select name="tool" id="tool-select" required><option value="">Select equipment...</option></select></label>
+            <label class="form-field"><span>Priority <b>*</b></span><select name="priority" required><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></label>
+            <label class="form-field"><span>Issue start time <b>*</b></span><input name="startTime" type="datetime-local" required></label>
+            <label class="form-field"><span>Detection time <b>*</b></span><input name="detectionTime" type="datetime-local" required></label>
+            <label class="form-field field-full"><span>Problem description <b>*</b></span><textarea name="description" required maxlength="1200" rows="3" placeholder="Describe symptoms, error codes, and actions already taken..."></textarea></label>
+            <label class="form-field"><span>Employee name <b>*</b></span><input name="reporter" required maxlength="80" placeholder="Enter your name"></label>
+            <label class="form-field"><span>Status</span><select name="status"><option>Open</option><option>In Progress</option><option>Resolved</option></select></label>
+            <div class="field-full advanced-toggle-row"><button class="advanced-toggle" id="advanced-toggle" type="button" aria-expanded="false">＋ Add investigation details <span>Optional</span></button></div>
+            <div class="advanced-fields field-full hidden" id="advanced-fields">
+              <label class="form-field"><span>Assigned to</span><input name="owner" maxlength="80" placeholder="Team member"></label>
+              <label class="form-field"><span>Downtime (minutes)</span><input name="downtime" type="number" min="0" step="1" placeholder="0"></label>
+              <label class="form-field field-full"><span>Root cause / investigation notes</span><textarea name="rootCause" maxlength="1200" rows="2" placeholder="What caused the issue?"></textarea></label>
+              <label class="form-field field-full"><span>Corrective action</span><textarea name="action" maxlength="1200" rows="2" placeholder="What has been done or should be done?"></textarea></label>
+            </div>
+          </div>
+        </div>
+        <div class="dialog-footer"><span><b>*</b> Required fields</span><div><button class="button button-secondary" type="button" id="cancel-dialog">Cancel</button><button class="button button-primary" type="submit">Submit incident <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button></div></div>
+      </form>
+    </dialog>
+
+    <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title">
+      <div id="detail-content"></div>
+    </dialog>
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>
